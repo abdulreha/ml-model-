@@ -146,7 +146,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/ccc')
+@app.route('/',methods=['POST','GET'])
 def hello():
     return 'Hello World'
 
