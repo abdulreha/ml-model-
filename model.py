@@ -68,7 +68,7 @@ def forecast_electricity_demand(
     ])
     model.compile(optimizer='adam', loss='mse')
     early_stop = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
-    model_checkpoint = ModelCheckpoint('best_lstm_model.h5', save_best_only=True)
+    model_checkpoint = ModelCheckpoint('best_lstm_model.keras', save_best_only=True)
 
     history = model.fit(
         X_train, y_train,
@@ -162,21 +162,19 @@ def hello():
 
 #     return jsonify({'prediction': prediction})
 
-@app.route('/predict',methods=['POST','GET'])
-def predict():
-    # data = request.get_json()
-    # input_data = data['input_data']
-    # prediction = model.predict(input_data)
-    # #m=main()
+
+@app.route('/predict/<state>', methods=['POST', 'GET'])
+def predict(state):
     result_json = forecast_electricity_demand(
-                      data_file="powerdata.csv",
-                      target_state="UP",
-                      seq_length=12,
-                      split_ratio=0.8,
-                      epochs=100,
-                      batch_size=32
-                  )
+        data_file="powerdata.csv",
+        target_state=state,
+        seq_length=12,
+        split_ratio=0.8,
+        epochs=100,
+        batch_size=32
+    )
     return jsonify(result_json)
+
 
 # Expose the app to the web
 # public_url = ngrok.connect(5000)
